@@ -7,13 +7,29 @@ import { expect } from 'chai';
 
 
 describe.only('Users', () => {
-    it('POST / user', () =>{
+    it('POST / get user graphQL', () =>{
        return request.post('/').set("Authorization",`Bearer ${TOKEN}`).set("Content-Type","application/json").send({query:"{users {id}}"}).
        then((res)=>{
         console.log("lien check")
        console.log(res.body.data.users[0]) 
       // expect(res.body.email).to.be.eq(data.email);
-       //expect(res.body).to.deep.include(data);   
+     
        });  
       });
+      it('POST / get user graphQL more detail', () =>{
+        return request.post('/').set("Authorization",`Bearer ${TOKEN}`).set("Content-Type","application/json").send({query:"{users {id,name,todos{title}}}"}).
+        then((res)=>{
+         console.log("lien check 2")
+        console.log(res.body.data.users[0]) 
+       // expect(res.body.email).to.be.eq(data.email);  
+        });  
+       });
+       it('POST / insert', () =>{
+        return request.post('/').set("Authorization",`Bearer ${TOKEN}`).set("Content-Type","application/json").send({query:`mutation { insert_todos(objects: {title: "lien mutation1"}){affected_rows,returning{id,title}}}`}).
+        then((res)=>{
+         console.log("lien check 3")
+        console.log(res.body.data.insert_todos.affected_rows) 
+       // expect(res.body.email).to.be.eq(data.email);  
+        });  
+       });
 });
