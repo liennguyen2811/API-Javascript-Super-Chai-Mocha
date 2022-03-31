@@ -7,6 +7,7 @@ import { expect } from 'chai';
 
 
 describe.only('Users', () => {
+    let id;
     it('POST / get user graphQL', () =>{
        return request.post('/').set("Authorization",`Bearer ${TOKEN}`).set("Content-Type","application/json").send({query:"{users {id}}"}).
        then((res)=>{
@@ -28,7 +29,16 @@ describe.only('Users', () => {
         return request.post('/').set("Authorization",`Bearer ${TOKEN}`).set("Content-Type","application/json").send({query:`mutation { insert_todos(objects: {title: "lien mutation1"}){affected_rows,returning{id,title}}}`}).
         then((res)=>{
          console.log("lien check 3")
-        console.log(res.body.data.insert_todos.affected_rows) 
+         id = res.body.data.insert_todos.returning[0].id;
+        console.log(res.body.data.insert_todos.returning[0].id);
+       // expect(res.body.email).to.be.eq(data.email);  
+        });  
+       });
+       it('POST / delete', () =>{
+        return request.post('/').set("Authorization",`Bearer ${TOKEN}`).set("Content-Type","application/json").send({query:`mutation{delete_todos(where: {id: {_eq: ${id}}}){affected_rows,returning { id,title } } }`}).
+        then((res)=>{
+         console.log("lien check 4")
+        console.log(res.body.data.delete_todos.returning[0].id) 
        // expect(res.body.email).to.be.eq(data.email);  
         });  
        });
